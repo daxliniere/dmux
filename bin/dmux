@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# dmux v1.4.6
+# dmux v1.4.7
 # Simple menu-driven front-end for tmux.
 
 set -u
@@ -33,13 +33,23 @@ get_free_numeric_session() {
 
 # Return success when dmux is currently running inside a tmux client.
 inside_tmux() {
+    if [[ -n "${TMUX_PANE:-}" ]]; then
+        tmux display-message -p -t "${TMUX_PANE}" '#S' >/dev/null 2>&1
+        return $?
+    fi
+
     [[ -n "${TMUX:-}" ]] && tmux display-message -p '#S' >/dev/null 2>&1
 }
 
 # Return the current tmux session name when dmux is running inside tmux.
 get_current_session() {
-    if inside_tmux; then
-        tmux display-message -p '#S'
+    if [[ -n "${TMUX_PANE:-}" ]]; then
+        tmux display-message -p -t "${TMUX_PANE}" '#S' 2>/dev/null || true
+        return
+    fi
+
+    if [[ -n "${TMUX:-}" ]]; then
+        tmux display-message -p '#S' 2>/dev/null || true
     fi
 }
 
@@ -261,8 +271,8 @@ main_menu() {
         count="${#sessions[@]}"
         current_session="$(get_current_session)"
 
-        echo "dmux"
-        echo "===="
+        echo "dmux 1.4.7"
+        echo "=========="
         echo
 
         if (( count == 0 )); then
