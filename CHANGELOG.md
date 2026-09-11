@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.3 - 2026-09-11
+
+### Added
+
+- Installer script with dependency checks
+- Automatic installation of `git` and `tmux` on Debian/Ubuntu systems when missing
+- Verification that `dmux` is available after installation
+- Helpful PATH warning when `/usr/local/bin` is not available
+
+
 ## 1.3.2 - 2026-09-11
 
 ### Fixed
