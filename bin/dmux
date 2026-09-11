@@ -1,0 +1,248 @@
+#!/usr/bin/env bash
+
+# dmux v1.2.0
+# Simple menu-driven front-end for tmux.
+
+set -u
+
+DMUX_NUMBER_MIN=100
+DMUX_NUMBER_MAX=999
+
+# Return tmux session names, one per line.
+get_sessions() {
+    tmux list-sessions -F '#S' 2>/dev/null || true
+}
+
+# Allocate the first unused numeric session name from 100-999.
+get_free_numeric_session() {
+    local number
+    local sessions
+
+    sessions="$(get_sessions)"
+
+    for ((number=DMUX_NUMBER_MIN; number<=DMUX_NUMBER_MAX; number++)); do
+        if ! grep -Fxq "$number" <<< "$sessions"; then
+            printf '%03d\n' "$number"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+# Create and attach to a new session.
+create_session() {
+    local session_name
+
+    clear
+    echo "Create new tmux session"
+    echo "======================="
+    echo
+    read -r -p "Session name [Enter for automatic number]: " session_name
+
+    if [[ -z "$session_name" ]]; then
+        if ! session_name="$(get_free_numeric_session)"; then
+            echo
+            echo "No free numeric session names available."
+            read -r -p "Press Enter to continue..."
+            return
+        fi
+    fi
+
+    if tmux has-session -t "=$session_name" 2>/dev/null; then
+        echo
+        echo "Session '$session_name' already exists."
+        read -r -p "Press Enter to continue..."
+        return
+    fi
+
+    tmux new-session -s "$session_name"
+}
+
+# Display a session menu and kill the selected session.
+kill_session_menu() {
+    local choice
+    local count
+    local i
+    local selected
+    local -a sessions
+
+    while true; do
+        clear
+
+        mapfile -t sessions < <(get_sessions)
+        count="${#sessions[@]}"
+
+        echo "Kill tmux session"
+        echo "================="
+        echo
+
+        if (( count == 0 )); then
+            echo "No tmux sessions."
+            echo
+            read -r -p "Press Enter to return..."
+            return
+        fi
+
+        for ((i=0; i<count; i++)); do
+            printf "%d - %s\n" "$((i + 1))" "${sessions[$i]}"
+        done
+
+        echo
+        echo "b - back"
+        echo
+
+        read -r -p "> " choice
+
+        case "$choice" in
+            b|B)
+                return
+                ;;
+            ''|*[!0-9]*)
+                ;;
+            *)
+                if (( choice >= 1 && choice <= count )); then
+                    selected="${sessions[$((choice - 1))]}"
+                    tmux kill-session -t "=$selected"
+                    return
+                fi
+                ;;
+        esac
+    done
+}
+
+# Display a session menu and rename the selected session.
+rename_session_menu() {
+    local choice
+    local count
+    local i
+    local selected
+    local new_name
+    local -a sessions
+
+    while true; do
+        clear
+
+        mapfile -t sessions < <(get_sessions)
+        count="${#sessions[@]}"
+
+        echo "Rename tmux session"
+        echo "==================="
+        echo
+
+        if (( count == 0 )); then
+            echo "No tmux sessions."
+            echo
+            read -r -p "Press Enter to return..."
+            return
+        fi
+
+        for ((i=0; i<count; i++)); do
+            printf "%d - %s\n" "$((i + 1))" "${sessions[$i]}"
+        done
+
+        echo
+        echo "b - back"
+        echo
+
+        read -r -p "> " choice
+
+        case "$choice" in
+            b|B)
+                return
+                ;;
+            ''|*[!0-9]*)
+                ;;
+            *)
+                if (( choice >= 1 && choice <= count )); then
+                    selected="${sessions[$((choice - 1))]}"
+
+                    echo
+                    read -r -p "New name for '$selected': " new_name
+
+                    if [[ -z "$new_name" ]]; then
+                        return
+                    fi
+
+                    if tmux has-session -t "=$new_name" 2>/dev/null; then
+                        echo
+                        echo "Session '$new_name' already exists."
+                        read -r -p "Press Enter to continue..."
+                        continue
+                    fi
+
+                    tmux rename-session -t "=$selected" "$new_name"
+                    return
+                fi
+                ;;
+        esac
+    done
+}
+
+# Display the main menu and attach/create/rename/kill as requested.
+main_menu() {
+    local choice
+    local count
+    local i
+    local selected
+    local -a sessions
+
+    while true; do
+        clear
+
+        mapfile -t sessions < <(get_sessions)
+        count="${#sessions[@]}"
+
+        echo "dmux"
+        echo "===="
+        echo
+
+        if (( count == 0 )); then
+            echo "No tmux sessions."
+        else
+            for ((i=0; i<count; i++)); do
+                printf "%d - %s\n" "$((i + 1))" "${sessions[$i]}"
+            done
+        fi
+
+        echo
+        echo "n - create new"
+        echo "r - rename existing session"
+        echo "k - kill existing session"
+        echo "q - quit"
+        echo
+
+        read -r -p "> " choice
+
+        case "$choice" in
+            n|N)
+                create_session
+                ;;
+            r|R)
+                rename_session_menu
+                ;;
+            k|K)
+                kill_session_menu
+                ;;
+            q|Q)
+                exit 0
+                ;;
+            ''|*[!0-9]*)
+                ;;
+            *)
+                if (( choice >= 1 && choice <= count )); then
+                    selected="${sessions[$((choice - 1))]}"
+                    tmux attach-session -t "=$selected"
+                fi
+                ;;
+        esac
+    done
+}
+
+# Refuse to start without tmux.
+if ! command -v tmux >/dev/null 2>&1; then
+    echo "dmux requires tmux, but tmux was not found in PATH." >&2
+    exit 1
+fi
+
+main_menu
