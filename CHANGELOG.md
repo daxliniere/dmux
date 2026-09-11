@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.5 - 2026-09-11
+
+### Fixed
+
+- dmux now exits immediately after a successful `switch-client` operation
+- Prevents old dmux menu processes remaining underneath newer invocations
+- Fixes the apparent need to press `q` twice to exit after switching sessions from inside tmux
+- New-session switching from inside tmux now follows the same clean-exit behavior
+
+
 ## 1.3.4 - 2026-09-11
 
 ### Changed
