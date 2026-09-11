@@ -13,7 +13,7 @@ dmux is designed for people who want the persistence and flexibility of tmux wit
 - Rename an existing session from a numbered menu
 - Kill an existing session from a numbered menu
 - Return to the dmux menu after detaching from a tmux session
-- Switch cleanly between sessions when dmux is launched from inside tmux
+- Selecting a session always enters it: dmux attaches when outside tmux and switches the current client when already inside tmux
 - Lightweight Bash implementation
 - tmux is the only runtime dependency
 
@@ -62,7 +62,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.3.1**
+Current version: **1.3.2**
 
 ## Licence
 
