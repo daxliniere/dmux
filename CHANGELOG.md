@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0 - 2026-09-11
+
+### Changed
+
+- Session menu numbering now starts at `0` instead of `1`
+- Top-level, rename, and kill menus all use zero-based session numbers
+
 ## 1.2.0 - 2026-09-11
 
 ### Added
