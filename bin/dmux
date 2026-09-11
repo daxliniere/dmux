@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# dmux v1.2.0
+# dmux v1.3.0
 # Simple menu-driven front-end for tmux.
 
 set -u
@@ -85,7 +85,7 @@ kill_session_menu() {
         fi
 
         for ((i=0; i<count; i++)); do
-            printf "%d - %s\n" "$((i + 1))" "${sessions[$i]}"
+            printf "%d - %s\n" "$i" "${sessions[$i]}"
         done
 
         echo
@@ -101,8 +101,8 @@ kill_session_menu() {
             ''|*[!0-9]*)
                 ;;
             *)
-                if (( choice >= 1 && choice <= count )); then
-                    selected="${sessions[$((choice - 1))]}"
+                if (( choice >= 0 && choice < count )); then
+                    selected="${sessions[$choice]}"
                     tmux kill-session -t "=$selected"
                     return
                 fi
@@ -138,7 +138,7 @@ rename_session_menu() {
         fi
 
         for ((i=0; i<count; i++)); do
-            printf "%d - %s\n" "$((i + 1))" "${sessions[$i]}"
+            printf "%d - %s\n" "$i" "${sessions[$i]}"
         done
 
         echo
@@ -154,8 +154,8 @@ rename_session_menu() {
             ''|*[!0-9]*)
                 ;;
             *)
-                if (( choice >= 1 && choice <= count )); then
-                    selected="${sessions[$((choice - 1))]}"
+                if (( choice >= 0 && choice < count )); then
+                    selected="${sessions[$choice]}"
 
                     echo
                     read -r -p "New name for '$selected': " new_name
@@ -201,7 +201,7 @@ main_menu() {
             echo "No tmux sessions."
         else
             for ((i=0; i<count; i++)); do
-                printf "%d - %s\n" "$((i + 1))" "${sessions[$i]}"
+                printf "%d - %s\n" "$i" "${sessions[$i]}"
             done
         fi
 
@@ -230,8 +230,8 @@ main_menu() {
             ''|*[!0-9]*)
                 ;;
             *)
-                if (( choice >= 1 && choice <= count )); then
-                    selected="${sessions[$((choice - 1))]}"
+                if (( choice >= 0 && choice < count )); then
+                    selected="${sessions[$choice]}"
                     tmux attach-session -t "=$selected"
                 fi
                 ;;
