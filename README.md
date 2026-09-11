@@ -63,6 +63,27 @@ hash -r
 dmux
 ```
 
+To batch-update all LXCs on a Proxmox server, use:
+```
+for CTID in $(pct list | awk 'NR>1 && $2=="running" {print $1}'); do
+    echo "Updating dmux in CT $CTID..."
+
+    pct exec "$CTID" -- bash -lc '
+        if [ -d /root/dmux/.git ]; then
+            cd /root/dmux &&
+            git fetch origin &&
+            git reset --hard origin/main &&
+            install -m 0755 bin/dmux /usr/bin/dmux &&
+            echo "dmux updated successfully"
+        else
+            echo "dmux repo not found in /root/dmux"
+        fi
+    '
+
+    echo
+done
+```
+
 ## Requirements
 
 - Bash
