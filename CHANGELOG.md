@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.2 - 2026-09-11
+
+### Fixed
+
+- Added explicit detection for whether dmux is running inside a live tmux client
+- Selecting a numbered session now always enters that session
+- Outside tmux, dmux uses `attach-session`
+- Inside tmux, dmux uses `switch-client`, which is the tmux-safe equivalent in the same terminal
+- New-session handling now follows the same inside/outside tmux logic
+
 ## 1.3.1 - 2026-09-11
 
 ### Fixed
