@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.4 - 2026-09-11
+
+### Changed
+
+- Replaced the current-session marker with the suffix ` (active session)`
+- The active-session suffix is displayed in yellow in the top-level menu
+
+
 ## 1.4.3 - 2026-09-11
 
 ### Added
