@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.1 - 2026-09-11
+
+### Fixed
+
+- Corrected Debian native package versioning so source packages build cleanly
+- Debian package version now matches the native source format
+
+
 ## 1.4.0 - 2026-09-11
 
 ### Added
