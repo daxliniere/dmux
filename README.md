@@ -41,7 +41,7 @@ On Debian or Ubuntu systems, the installer checks for `git` and `tmux`, installs
 
 ```bash
 apt update
-apt install -y git
+apt install -y git tmux
 
 git clone https://github.com/daxliniere/dmux.git
 cd dmux
