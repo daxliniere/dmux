@@ -47,7 +47,6 @@ apt install -y git tmux
 
 git clone https://github.com/daxliniere/dmux.git
 cd dmux
-chmod +x install.sh
 ./install.sh
 
 hash -r
@@ -77,7 +76,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.4.5**
+Current version: **1.4.6**
 
 ## Licence
 
