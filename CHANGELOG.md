@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.5 - 2026-09-11
+
+### Changed
+
+- Renamed the yellow current-session suffix from `(active session)` to `(current session)` to avoid implying that other tmux sessions are inactive
+
+
 ## 1.4.4 - 2026-09-11
 
 ### Changed
