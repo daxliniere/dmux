@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# dmux installer v1.3.3
+# dmux installer v1.3.4
 
 set -euo pipefail
 
 REPO_URL="https://github.com/daxliniere/dmux.git"
-INSTALL_PATH="/usr/local/bin/dmux"
+INSTALL_PATH="/usr/bin/dmux"
 TMP_DIR=""
 
 cleanup() {
@@ -47,15 +47,7 @@ git clone --depth 1 "${REPO_URL}" "${TMP_DIR}/dmux"
 install -m 0755 "${TMP_DIR}/dmux/bin/dmux" "${INSTALL_PATH}"
 
 if ! command -v dmux >/dev/null 2>&1; then
-    if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
-        echo
-        echo "dmux was installed to ${INSTALL_PATH}, but /usr/local/bin is not in PATH."
-        echo 'Add this line to your shell profile:'
-        echo 'export PATH="/usr/local/bin:$PATH"'
-        exit 1
-    fi
-
-    echo "dmux was installed, but the shell cannot locate it yet." >&2
+    echo "dmux was installed to ${INSTALL_PATH}, but the shell cannot locate it." >&2
     exit 1
 fi
 
