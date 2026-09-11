@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# dmux v1.3.1
+# dmux v1.3.2
 # Simple menu-driven front-end for tmux.
 
 set -u
@@ -31,23 +31,30 @@ get_free_numeric_session() {
 }
 
 
-# Attach to a session, or switch clients if dmux is already running inside tmux.
+# Return success when dmux is currently running inside a tmux client.
+inside_tmux() {
+    [[ -n "${TMUX:-}" ]] && tmux display-message -p '#S' >/dev/null 2>&1
+}
+
+# Enter an existing tmux session.
+# Outside tmux, attach a client to the selected session.
+# Inside tmux, switch the current client to the selected session.
 open_session() {
     local session_name
 
     session_name="$1"
 
-    if [[ -n "${TMUX:-}" ]]; then
+    if inside_tmux; then
         if ! tmux switch-client -t "=$session_name"; then
             echo
-            echo "Unable to switch to session '$session_name'."
+            echo "Unable to enter session '$session_name'."
             read -r -p "Press Enter to continue..."
             return 1
         fi
     else
         if ! tmux attach-session -t "=$session_name"; then
             echo
-            echo "Unable to attach to session '$session_name'."
+            echo "Unable to enter session '$session_name'."
             read -r -p "Press Enter to continue..."
             return 1
         fi
@@ -80,16 +87,24 @@ create_session() {
         return
     fi
 
-    if [[ -n "${TMUX:-}" ]]; then
+    if inside_tmux; then
         if tmux new-session -d -s "$session_name"; then
-            tmux switch-client -t "=$session_name"
+            if ! tmux switch-client -t "=$session_name"; then
+                echo
+                echo "Session '$session_name' was created, but dmux could not enter it."
+                read -r -p "Press Enter to continue..."
+            fi
         else
             echo
             echo "Unable to create session '$session_name'."
             read -r -p "Press Enter to continue..."
         fi
     else
-        tmux new-session -s "$session_name"
+        if ! tmux new-session -s "$session_name"; then
+            echo
+            echo "Unable to create or enter session '$session_name'."
+            read -r -p "Press Enter to continue..."
+        fi
     fi
 }
 
