@@ -6,7 +6,7 @@ dmux is designed for people who want the persistence and flexibility of tmux wit
 
 ## Features
 
-- Numbered menu of existing tmux sessions
+- Zero-based numbered menu of existing tmux sessions
 - Attach to a session by typing its menu number
 - Create a named session
 - Press Enter when creating a session to get the first free three-digit session name
@@ -22,8 +22,8 @@ dmux is designed for people who want the persistence and flexibility of tmux wit
 dmux
 ====
 
-1 - some_session
-2 - another_session
+0 - some_session
+1 - another_session
 
 n - create new
 r - rename existing session
@@ -61,7 +61,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.2.0**
+Current version: **1.3.0**
 
 ## Licence
 
