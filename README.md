@@ -14,7 +14,7 @@ dmux is designed for people who want the persistence and flexibility of tmux wit
 - Kill an existing session from a numbered menu
 - Return to the dmux menu after detaching from a tmux session
 - Selecting a session always enters it: dmux attaches when outside tmux and switches the current client when already inside tmux
-- When dmux is launched inside tmux, the current session is marked with a yellow ` (active session)` suffix
+- When dmux is launched inside tmux, the current session is marked with a yellow ` (current session)` suffix
 - Selecting the already-current session exits dmux, the same as pressing `q`
 - When switching sessions from inside tmux, dmux exits cleanly after the switch so stale menu processes do not accumulate
 - Lightweight Bash implementation
@@ -77,7 +77,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.4.4**
+Current version: **1.4.5**
 
 ## Licence
 
