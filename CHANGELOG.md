@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.6 - 2026-09-11
+
+### Fixed
+
+- A failed `apt-get update` no longer immediately aborts dependency installation
+- Installer now warns about broken unrelated APT repositories and still attempts to install required dependencies from existing package lists
+- Dependency installation failures now produce a clearer error explaining that APT repository configuration must be repaired
+
+
 ## 1.3.5 - 2026-09-11
 
 ### Fixed
