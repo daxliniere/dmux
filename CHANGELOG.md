@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.1 - 2026-09-11
+
+### Fixed
+
+- Selecting a session now uses `tmux switch-client` when dmux is already running inside tmux
+- Session attach/switch failures are now shown instead of immediately disappearing when the menu redraws
+- Creating a new session from inside tmux now creates it detached and switches to it cleanly
+
 ## 1.3.0 - 2026-09-11
 
 ### Changed
