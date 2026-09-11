@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# dmux v1.4.0
+# dmux v1.4.1
 # Simple menu-driven front-end for tmux.
 
 set -u
