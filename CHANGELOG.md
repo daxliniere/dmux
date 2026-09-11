@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.7 - 2026-09-11
+
+### Fixed
+
+- Current-session detection now prefers the current tmux pane context when available
+- Falls back to the tmux client context when pane information is unavailable
+
+### Changed
+
+- Top-level heading now displays the installed version as `dmux 1.4.7`
+
+
 ## 1.4.6 - 2026-09-11
 
 ### Changed
