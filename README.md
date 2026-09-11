@@ -65,7 +65,7 @@ dmux
 ## Requirements
 
 - Bash
-- tmux
+- tmux (will be installed using the above installation command)
 
 ## Automatic session names
 
