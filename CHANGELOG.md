@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.6 - 2026-09-11
+
+### Changed
+
+- Removed the unnecessary `chmod +x install.sh` step from installation instructions
+- Deployment clones can now be updated cleanly by resetting them to `origin/main`
+
+
 ## 1.4.5 - 2026-09-11
 
 ### Changed
