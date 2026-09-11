@@ -1,0 +1,16 @@
+Source: dmux
+Section: utils
+Priority: optional
+Maintainer: daxliniere <8109020+daxliniere@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Homepage: https://github.com/daxliniere/dmux
+Rules-Requires-Root: no
+
+Package: dmux
+Architecture: all
+Depends: tmux, bash, ${misc:Depends}
+Description: simple menu-driven front-end for tmux
+ dmux provides a lightweight interactive menu for common tmux session
+ management tasks. It can list, create, rename, kill, attach to, and switch
+ between tmux sessions without requiring users to remember tmux commands.
