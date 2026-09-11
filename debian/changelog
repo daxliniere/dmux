@@ -1,6 +1,6 @@
-dmux (1.4.5) unstable; urgency=medium
+dmux (1.4.6) unstable; urgency=medium
 
-  * Rename the current-session marker to "(current session)".
-  * Avoid implying that other tmux sessions are inactive.
+  * Remove unnecessary chmod step from installation documentation.
+  * Document clean deployment-clone update behavior.
 
- -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Fri, 11 Sep 2026 18:13:00 +0100
+ -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Fri, 11 Sep 2026 18:20:00 +0100
