@@ -37,7 +37,7 @@ q - quit
 
 ## Installation
 
-On Debian or Ubuntu systems, the installer checks for `git` and `tmux`, installs either dependency automatically if it is missing, and installs `dmux` into `/usr/bin`.
+On Debian or Ubuntu systems, the installer checks for `git` and `tmux`, installs either dependency automatically if it is missing, and installs `dmux` into `/usr/bin`. If `apt-get update` fails because of an unrelated broken third-party repository, the installer will warn and still attempt dependency installation using the existing package lists.
 
 ```bash
 apt update
@@ -75,7 +75,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.3.5**
+Current version: **1.3.6**
 
 ## Licence
 
