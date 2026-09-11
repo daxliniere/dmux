@@ -40,17 +40,27 @@ q - quit
 On Debian or Ubuntu systems, the installer checks for `git` and `tmux`, installs either dependency automatically if it is missing, and installs `dmux` into `/usr/bin`.
 
 ```bash
+apt update
+apt install -y git
+
 git clone https://github.com/daxliniere/dmux.git
 cd dmux
-sudo ./install.sh
-```
+chmod +x install.sh
+./install.sh
 
-Then run:
-
-```bash
+hash -r
 dmux
 ```
 
+## To update
+
+```
+cd ~/dmux
+git pull
+install -m 0755 bin/dmux /usr/bin/dmux
+hash -r
+dmux
+```
 
 ## Requirements
 
