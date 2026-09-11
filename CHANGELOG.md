@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.4.0 - 2026-09-11
+
+### Added
+
+- Standard Debian package metadata under `debian/`
+- Runtime dependency on `tmux`
+- Debian package build support with debhelper
+- Launchpad/PPA-ready source package structure
+- Local Debian build instructions in the README
+
+
 ## 1.3.6 - 2026-09-11
 
 ### Fixed
