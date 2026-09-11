@@ -75,7 +75,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.4.1**
+Current version: **1.4.2**
 
 ## Licence
 
