@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.4 - 2026-09-11
+
+### Changed
+
+- Installer now installs `dmux` to `/usr/bin/dmux`
+- Removed reliance on `/usr/local/bin` being present in the user's PATH
+- This allows dmux to work immediately in existing tmux panes and other shells with a standard system PATH
+
+
 ## 1.3.3 - 2026-09-11
 
 ### Added
