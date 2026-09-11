@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: dmux
+Source: https://github.com/daxliniere/dmux
+
+Files: *
+Copyright: 2026 daxliniere
+License: CC0-1.0
+ To the extent possible under law, the author has waived all copyright and
+ related or neighboring rights to this work.
+ .
+ The full CC0 1.0 Universal legal code is provided in the top-level LICENSE
+ file distributed with this source package.
