@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# dmux v1.3.0
+# dmux v1.3.1
 # Simple menu-driven front-end for tmux.
 
 set -u
@@ -30,6 +30,30 @@ get_free_numeric_session() {
     return 1
 }
 
+
+# Attach to a session, or switch clients if dmux is already running inside tmux.
+open_session() {
+    local session_name
+
+    session_name="$1"
+
+    if [[ -n "${TMUX:-}" ]]; then
+        if ! tmux switch-client -t "=$session_name"; then
+            echo
+            echo "Unable to switch to session '$session_name'."
+            read -r -p "Press Enter to continue..."
+            return 1
+        fi
+    else
+        if ! tmux attach-session -t "=$session_name"; then
+            echo
+            echo "Unable to attach to session '$session_name'."
+            read -r -p "Press Enter to continue..."
+            return 1
+        fi
+    fi
+}
+
 # Create and attach to a new session.
 create_session() {
     local session_name
@@ -56,7 +80,17 @@ create_session() {
         return
     fi
 
-    tmux new-session -s "$session_name"
+    if [[ -n "${TMUX:-}" ]]; then
+        if tmux new-session -d -s "$session_name"; then
+            tmux switch-client -t "=$session_name"
+        else
+            echo
+            echo "Unable to create session '$session_name'."
+            read -r -p "Press Enter to continue..."
+        fi
+    else
+        tmux new-session -s "$session_name"
+    fi
 }
 
 # Display a session menu and kill the selected session.
@@ -232,7 +266,7 @@ main_menu() {
             *)
                 if (( choice >= 0 && choice < count )); then
                     selected="${sessions[$choice]}"
-                    tmux attach-session -t "=$selected"
+                    open_session "$selected"
                 fi
                 ;;
         esac
