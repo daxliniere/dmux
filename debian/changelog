@@ -1,7 +1,6 @@
-dmux (1.4.3) unstable; urgency=medium
+dmux (1.4.4) unstable; urgency=medium
 
-  * Mark the current tmux session in the top-level menu.
-  * Exit dmux when the already-current session is selected.
-  * Avoid unnecessary tmux attach or switch operations for the current session.
+  * Display the current-session suffix as "(active session)".
+  * Show the active-session suffix in yellow.
 
  -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Fri, 11 Sep 2026 18:13:00 +0100
