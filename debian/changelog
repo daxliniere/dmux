@@ -1,0 +1,7 @@
+dmux (1.4.0-1) unstable; urgency=medium
+
+  * Initial Debian packaging.
+  * Declare tmux as a runtime dependency.
+  * Install dmux to /usr/bin.
+
+ -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Fri, 11 Sep 2026 18:00:00 +0100
