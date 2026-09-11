@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.3 - 2026-09-11
+
+### Added
+
+- Top-level menu now marks the current tmux session with `[current]`
+
+### Changed
+
+- Selecting the session that the user is already inside now exits dmux immediately, the same as pressing `q`
+- No tmux attach or switch operation is attempted for the already-current session
+
+
 ## 1.4.2 - 2026-09-11
 
 ### Fixed
