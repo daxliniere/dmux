@@ -23,8 +23,8 @@ dmux is designed for people who want the persistence and flexibility of tmux wit
 ## Example
 
 ```text
-dmux
-====
+dmux 1.4.7
+==========
 
 0 - some_session
 1 - another_session
@@ -97,7 +97,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.4.6**
+Current version: **1.4.7**
 
 ## Licence
 
