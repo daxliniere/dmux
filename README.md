@@ -36,11 +36,12 @@ q - quit
 
 ## Installation
 
-For now, clone the repository and place `bin/dmux` somewhere in your `PATH`.
+On Debian or Ubuntu systems, the installer checks for `git` and `tmux`, installs either dependency automatically if it is missing, and installs `dmux` into `/usr/local/bin`.
 
 ```bash
 git clone https://github.com/daxliniere/dmux.git
-sudo install -m 0755 dmux/bin/dmux /usr/local/bin/dmux
+cd dmux
+sudo ./install.sh
 ```
 
 Then run:
@@ -48,6 +49,14 @@ Then run:
 ```bash
 dmux
 ```
+
+If `/usr/local/bin` is not in your shell's `PATH`, add:
+
+```bash
+export PATH="/usr/local/bin:$PATH"
+```
+
+to your shell profile.
 
 ## Requirements
 
@@ -62,7 +71,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.3.2**
+Current version: **1.3.3**
 
 ## Licence
 
