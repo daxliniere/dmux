@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# dmux v1.3.4
+# dmux v1.3.5
 # Simple menu-driven front-end for tmux.
 
 set -u
@@ -45,7 +45,9 @@ open_session() {
     session_name="$1"
 
     if inside_tmux; then
-        if ! tmux switch-client -t "=$session_name"; then
+        if tmux switch-client -t "=$session_name"; then
+            exit 0
+        else
             echo
             echo "Unable to enter session '$session_name'."
             read -r -p "Press Enter to continue..."
@@ -89,7 +91,9 @@ create_session() {
 
     if inside_tmux; then
         if tmux new-session -d -s "$session_name"; then
-            if ! tmux switch-client -t "=$session_name"; then
+            if tmux switch-client -t "=$session_name"; then
+                exit 0
+            else
                 echo
                 echo "Session '$session_name' was created, but dmux could not enter it."
                 read -r -p "Press Enter to continue..."
