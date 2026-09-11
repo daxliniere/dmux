@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# dmux installer v1.3.4
+# dmux installer v1.3.6
 
 set -euo pipefail
 
@@ -27,8 +27,20 @@ ensure_command() {
 
     if command -v apt-get >/dev/null 2>&1; then
         echo "${command_name} is not installed. Installing ${package_name}..."
-        apt-get update
-        apt-get install -y "${package_name}"
+
+        if ! apt-get update; then
+            echo
+            echo "Warning: apt-get update failed, possibly because of an unrelated broken repository."
+            echo "dmux will still attempt to install ${package_name} using the existing package lists."
+            echo
+        fi
+
+        if ! apt-get install -y "${package_name}"; then
+            echo
+            echo "Unable to install required dependency: ${package_name}" >&2
+            echo "Fix your APT repository configuration, then run this installer again." >&2
+            exit 1
+        fi
     else
         echo "Missing dependency: ${command_name}" >&2
         echo "Install '${package_name}' with your system package manager, then run this installer again." >&2
