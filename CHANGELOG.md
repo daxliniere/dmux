@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.4.2 - 2026-09-11
+
+### Fixed
+
+- Marked the dmux executable as executable in the Git repository
+- Marked the installer as executable in the Git repository
+- Ensures Debian package builds preserve a runnable /usr/bin/dmux
+
+
 ## 1.4.1 - 2026-09-11
 
 ### Fixed
