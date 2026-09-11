@@ -1,6 +1,6 @@
-dmux (1.4.6) unstable; urgency=medium
+dmux (1.4.7) unstable; urgency=medium
 
-  * Remove unnecessary chmod step from installation documentation.
-  * Document clean deployment-clone update behavior.
+  * Improve current-session detection using the current tmux pane.
+  * Display the dmux version in the top-level heading.
 
- -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Fri, 11 Sep 2026 18:20:00 +0100
+ -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Fri, 11 Sep 2026 20:32:00 +0100
