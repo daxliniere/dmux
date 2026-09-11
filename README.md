@@ -75,8 +75,33 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.3.6**
+Current version: **1.4.0**
 
 ## Licence
 
 CC0 1.0 Universal
+
+
+## Debian/Ubuntu packaging
+
+The repository now includes standard Debian packaging metadata under `debian/`.
+
+The package declares `tmux` as a runtime dependency, so installing the generated `.deb` with APT automatically installs tmux when required.
+
+To build a Debian package locally:
+
+```bash
+apt update
+apt install -y build-essential debhelper devscripts
+git clone https://github.com/daxliniere/dmux.git
+cd dmux
+dpkg-buildpackage -us -uc -b
+```
+
+The resulting `.deb` is created in the parent directory.
+
+For Launchpad/PPA uploads, build a signed source package with:
+
+```bash
+dpkg-buildpackage -S -sa
+```
