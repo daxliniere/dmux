@@ -1,6 +1,7 @@
-dmux (1.4.7) unstable; urgency=medium
+dmux (1.4.8) unstable; urgency=medium
 
-  * Improve current-session detection using the current tmux pane.
-  * Display the dmux version in the top-level heading.
+  * Add session respawn command on "s".
+  * Recreate respawned sessions with the exact same name.
+  * Safely respawn the current session using a temporary holding session.
 
- -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Fri, 11 Sep 2026 20:32:00 +0100
+ -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Sat, 12 Sep 2026 01:53:00 +0100
