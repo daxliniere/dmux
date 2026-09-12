@@ -99,7 +99,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.4.8**
+Current version: **1.4.9**
 
 ## Licence
 
@@ -129,3 +129,44 @@ For Launchpad/PPA uploads, build a signed source package with:
 ```bash
 dpkg-buildpackage -S -sa
 ```
+
+
+## Updating dmux across Proxmox LXCs
+
+If dmux is already installed in multiple running Proxmox LXCs and each container has the repository cloned at `/root/dmux`, run this on the Proxmox host:
+
+```bash
+for CTID in $(pct list | awk 'NR>1 && $2=="running" {print $1}'); do
+    echo "Updating dmux in CT $CTID..."
+
+    pct exec "$CTID" -- bash -lc '
+        set -e
+
+        if [ ! -d /root/dmux/.git ]; then
+            echo "dmux repo not found in /root/dmux"
+            exit 0
+        fi
+
+        cd /root/dmux
+        git fetch origin
+        git reset --hard origin/main
+
+        rm -f /usr/bin/dmux
+        rm -f /usr/local/bin/dmux
+
+        install -m 0755 bin/dmux /usr/bin/dmux
+        ln -s /usr/bin/dmux /usr/local/bin/dmux
+
+        hash -r 2>/dev/null || true
+
+        printf "Installed: "
+        grep "^# dmux v" /usr/bin/dmux | sed "s/^# //"
+
+        echo "Updated successfully"
+    '
+
+    echo
+done
+```
+
+This deliberately resets the deployment clone to `origin/main` and discards local changes inside `/root/dmux`. It also removes stale copies and makes `/usr/local/bin/dmux` a symlink to the canonical `/usr/bin/dmux`, preventing different shells from running different versions because of PATH ordering.
