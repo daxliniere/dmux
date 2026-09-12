@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.8 - 2026-09-12
+
+### Added
+
+- New `s` top-level option for respawning an existing session
+- Respawn menu mirrors the numbered rename and kill menus
+- Respawn kills the selected session and recreates it with the exact same name
+- Respawning the current session safely moves the client to a temporary holding session, recreates the original session, switches back, and removes the temporary session
+
+### Notes
+
+- Because the recreated session keeps the same name, it should retain the same menu position wherever tmux session ordering is name-based
+
+
 ## 1.4.7 - 2026-09-11
 
 ### Fixed
