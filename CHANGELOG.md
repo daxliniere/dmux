@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.4.10 - 2026-09-12
+
+### Fixed
+
+- Corrected the temporary respawn session name to include the dmux process ID
+- Removed unsafe or overly broad deployment-update examples from the README
+
+### Documentation
+
+- Added separate root and sudo installation instructions
+- Added safe single-machine update instructions
+- Replaced Proxmox fleet updates with a dmux-only updater that does not reset the working tree
+- Documented exactly which filesystem paths the updater may change
+
+
 ## 1.4.9 - 2026-09-12
 
 ### Documentation
