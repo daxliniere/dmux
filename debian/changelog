@@ -1,6 +1,6 @@
-dmux (1.4.9) unstable; urgency=medium
+dmux (1.4.10) unstable; urgency=medium
 
-  * Document Proxmox LXC fleet updates.
-  * Standardize deployment guidance for /usr/bin and /usr/local/bin.
+  * Fix temporary session naming during respawn.
+  * Replace deployment documentation with dmux-only safe update procedures.
 
- -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Sat, 12 Sep 2026 02:05:00 +0100
+ -- daxliniere <8109020+daxliniere@users.noreply.github.com>  Sat, 12 Sep 2026 02:20:00 +0100
