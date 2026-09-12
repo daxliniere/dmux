@@ -24,7 +24,7 @@ dmux is designed for people who want the persistence and flexibility of tmux wit
 ## Example
 
 ```text
-dmux 1.4.8
+dmux 1.4.10
 ==========
 
 0 - some_session
@@ -41,50 +41,164 @@ q - quit
 
 ## Installation
 
-On Debian or Ubuntu systems, the installer checks for `git` and `tmux`, installs either dependency automatically if it is missing, and installs `dmux` into `/usr/bin`. If `apt-get update` fails because of an unrelated broken third-party repository, the installer will warn and still attempt dependency installation using the existing package lists.
+### Debian/Ubuntu - root shell
 
 ```bash
 apt update
 apt install -y git tmux
 
-git clone https://github.com/daxliniere/dmux.git
-cd dmux
-./install.sh
+if [ -d /root/dmux/.git ]; then
+    cd /root/dmux
+    git fetch origin
+else
+    git clone https://github.com/daxliniere/dmux.git /root/dmux
+    cd /root/dmux
+fi
 
-hash -r
+git show origin/main:bin/dmux > /tmp/dmux-install
+grep -q '^# dmux v' /tmp/dmux-install || {
+    echo "Refusing installation: fetched file does not look like dmux"
+    rm -f /tmp/dmux-install
+    exit 1
+}
+
+install -m 0755 /tmp/dmux-install /usr/bin/dmux
+rm -f /tmp/dmux-install
+
+if [ -L /usr/local/bin/dmux ]; then
+    ln -sfn /usr/bin/dmux /usr/local/bin/dmux
+elif [ -f /usr/local/bin/dmux ] && grep -q '^# dmux v' /usr/local/bin/dmux 2>/dev/null; then
+    rm -f /usr/local/bin/dmux
+    ln -s /usr/bin/dmux /usr/local/bin/dmux
+fi
+
+hash -r 2>/dev/null || true
 dmux
 ```
 
-## To update
+### Debian/Ubuntu - normal user with sudo
 
-```
-cd ~/dmux
-git pull
-install -m 0755 bin/dmux /usr/bin/dmux
-hash -r
+```bash
+sudo apt update
+sudo apt install -y git tmux
+
+if [ -d "$HOME/dmux/.git" ]; then
+    cd "$HOME/dmux"
+    git fetch origin
+else
+    git clone https://github.com/daxliniere/dmux.git "$HOME/dmux"
+    cd "$HOME/dmux"
+fi
+
+git show origin/main:bin/dmux > /tmp/dmux-install
+grep -q '^# dmux v' /tmp/dmux-install || {
+    echo "Refusing installation: fetched file does not look like dmux"
+    rm -f /tmp/dmux-install
+    exit 1
+}
+
+sudo install -m 0755 /tmp/dmux-install /usr/bin/dmux
+rm -f /tmp/dmux-install
+
+if [ -L /usr/local/bin/dmux ]; then
+    sudo ln -sfn /usr/bin/dmux /usr/local/bin/dmux
+elif [ -f /usr/local/bin/dmux ] && grep -q '^# dmux v' /usr/local/bin/dmux 2>/dev/null; then
+    sudo rm -f /usr/local/bin/dmux
+    sudo ln -s /usr/bin/dmux /usr/local/bin/dmux
+fi
+
+hash -r 2>/dev/null || true
 dmux
 ```
 
-To batch-update all LXCs on a Proxmox server, use:
+These install commands only write dmux itself to `/usr/bin/dmux`, and only replace `/usr/local/bin/dmux` when that path is already a symlink or can be positively identified as an older dmux script.
+
+## Updating a single installation
+
+From a root shell where the deployment clone is `/root/dmux`:
+
+```bash
+cd /root/dmux || exit 1
+git fetch origin
+
+git show origin/main:bin/dmux > /tmp/dmux-update
+grep -q '^# dmux v' /tmp/dmux-update || {
+    echo "Refusing update: fetched file does not look like dmux"
+    rm -f /tmp/dmux-update
+    exit 1
+}
+
+install -m 0755 /tmp/dmux-update /usr/bin/dmux
+rm -f /tmp/dmux-update
+
+if [ -L /usr/local/bin/dmux ]; then
+    ln -sfn /usr/bin/dmux /usr/local/bin/dmux
+elif [ -f /usr/local/bin/dmux ] && grep -q '^# dmux v' /usr/local/bin/dmux 2>/dev/null; then
+    rm -f /usr/local/bin/dmux
+    ln -s /usr/bin/dmux /usr/local/bin/dmux
+fi
+
+hash -r 2>/dev/null || true
+grep '^# dmux v' /usr/bin/dmux
 ```
+
+This does not run `git reset --hard` and does not modify tracked files in the local clone.
+
+## Updating dmux across Proxmox LXCs
+
+Run this on the Proxmox host. It updates only running LXCs that already contain a dmux checkout at `/root/dmux`:
+
+```bash
 for CTID in $(pct list | awk 'NR>1 && $2=="running" {print $1}'); do
     echo "Updating dmux in CT $CTID..."
 
     pct exec "$CTID" -- bash -lc '
-        if [ -d /root/dmux/.git ]; then
-            cd /root/dmux &&
-            git fetch origin &&
-            git reset --hard origin/main &&
-            install -m 0755 bin/dmux /usr/bin/dmux &&
-            echo "dmux updated successfully"
-        else
-            echo "dmux repo not found in /root/dmux"
+        REPO=/root/dmux
+        TMP=/tmp/dmux-update-$$
+
+        if [ ! -d "$REPO/.git" ]; then
+            echo "Skipping: /root/dmux is not a dmux git checkout"
+            exit 0
         fi
+
+        cd "$REPO" || exit 1
+
+        if ! git fetch origin; then
+            echo "Failed: could not fetch dmux"
+            exit 1
+        fi
+
+        if ! git show origin/main:bin/dmux > "$TMP"; then
+            echo "Failed: could not read dmux from origin/main"
+            rm -f "$TMP"
+            exit 1
+        fi
+
+        if ! grep -q "^# dmux v" "$TMP"; then
+            echo "Refusing update: fetched file does not look like dmux"
+            rm -f "$TMP"
+            exit 1
+        fi
+
+        install -m 0755 "$TMP" /usr/bin/dmux
+        rm -f "$TMP"
+
+        if [ -L /usr/local/bin/dmux ]; then
+            ln -sfn /usr/bin/dmux /usr/local/bin/dmux
+        elif [ -f /usr/local/bin/dmux ] && grep -q "^# dmux v" /usr/local/bin/dmux 2>/dev/null; then
+            rm -f /usr/local/bin/dmux
+            ln -s /usr/bin/dmux /usr/local/bin/dmux
+        fi
+
+        printf "Installed: "
+        grep "^# dmux v" /usr/bin/dmux | sed "s/^# //"
     '
 
     echo
 done
 ```
+
+The fleet updater deliberately does **not** use `git reset --hard`. It does not alter the container's working tree, package configuration, services, shell profiles, or unrelated files. It writes only the dmux executable and, where already identifiable as dmux, its compatibility path at `/usr/local/bin/dmux`.
 
 ## Requirements
 
@@ -99,7 +213,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.4.9**
+Current version: **1.4.10**
 
 ## Licence
 
