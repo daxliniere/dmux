@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.4.9 - 2026-09-12
+
+### Documentation
+
+- Added a Proxmox host command for updating dmux across all running LXCs
+- Documented removal of stale `/usr/local/bin/dmux` copies
+- Standardized `/usr/local/bin/dmux` as a symlink to `/usr/bin/dmux` for deployment consistency
+
+
 ## 1.4.8 - 2026-09-12
 
 ### Added
