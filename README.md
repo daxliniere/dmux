@@ -11,6 +11,7 @@ dmux is designed for people who want the persistence and flexibility of tmux wit
 - Create a named session
 - Press Enter when creating a session to get the first free three-digit session name
 - Rename an existing session from a numbered menu
+- Respawn an existing session from a numbered menu, recreating it with the same name
 - Kill an existing session from a numbered menu
 - Return to the dmux menu after detaching from a tmux session
 - Selecting a session always enters it: dmux attaches when outside tmux and switches the current client when already inside tmux
@@ -23,7 +24,7 @@ dmux is designed for people who want the persistence and flexibility of tmux wit
 ## Example
 
 ```text
-dmux 1.4.7
+dmux 1.4.8
 ==========
 
 0 - some_session
@@ -31,6 +32,7 @@ dmux 1.4.7
 
 n - create new
 r - rename existing session
+s - respawn existing session
 k - kill existing session
 q - quit
 
@@ -97,7 +99,7 @@ For example, if `100`, `101`, and `103` already exist, the next automatically cr
 
 ## Version
 
-Current version: **1.4.7**
+Current version: **1.4.8**
 
 ## Licence
 
