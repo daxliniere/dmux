@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# dmux v1.4.7
+# dmux v1.4.8
 # Simple menu-driven front-end for tmux.
 
 set -u
@@ -255,7 +255,127 @@ rename_session_menu() {
     done
 }
 
-# Display the main menu and attach/create/rename/kill as requested.
+
+# Respawn a selected session with the exact same name.
+respawn_session() {
+    local current_session
+    local session_name
+    local temp_session
+
+    session_name="$1"
+    current_session="$(get_current_session)"
+
+    if [[ -n "$current_session" && "$session_name" == "$current_session" ]]; then
+        temp_session="__dmux_respawn_$"
+
+        while tmux has-session -t "=$temp_session" 2>/dev/null; do
+            temp_session="${temp_session}_x"
+        done
+
+        if ! tmux new-session -d -s "$temp_session"; then
+            echo
+            echo "Unable to create temporary session for respawn."
+            read -r -p "Press Enter to continue..."
+            return 1
+        fi
+
+        if ! tmux switch-client -t "=$temp_session"; then
+            tmux kill-session -t "=$temp_session" 2>/dev/null || true
+            echo
+            echo "Unable to move the current client to a temporary session."
+            read -r -p "Press Enter to continue..."
+            return 1
+        fi
+
+        if ! tmux kill-session -t "=$session_name"; then
+            tmux switch-client -t "=$session_name" 2>/dev/null || true
+            tmux kill-session -t "=$temp_session" 2>/dev/null || true
+            echo
+            echo "Unable to kill session '$session_name'."
+            read -r -p "Press Enter to continue..."
+            return 1
+        fi
+
+        if ! tmux new-session -d -s "$session_name"; then
+            echo
+            echo "Session '$session_name' was killed but could not be recreated."
+            read -r -p "Press Enter to continue..."
+            return 1
+        fi
+
+        tmux switch-client -t "=$session_name"
+        tmux kill-session -t "=$temp_session" 2>/dev/null || true
+        exit 0
+    fi
+
+    if ! tmux kill-session -t "=$session_name"; then
+        echo
+        echo "Unable to kill session '$session_name'."
+        read -r -p "Press Enter to continue..."
+        return 1
+    fi
+
+    if ! tmux new-session -d -s "$session_name"; then
+        echo
+        echo "Session '$session_name' was killed but could not be recreated."
+        read -r -p "Press Enter to continue..."
+        return 1
+    fi
+}
+
+# Display a session menu and respawn the selected session.
+respawn_session_menu() {
+    local choice
+    local count
+    local i
+    local selected
+    local -a sessions
+
+    while true; do
+        clear
+
+        mapfile -t sessions < <(get_sessions)
+        count="${#sessions[@]}"
+
+        echo "Respawn tmux session"
+        echo "===================="
+        echo
+
+        if (( count == 0 )); then
+            echo "No tmux sessions."
+            echo
+            read -r -p "Press Enter to return..."
+            return
+        fi
+
+        for ((i=0; i<count; i++)); do
+            printf "%d - %s\n" "$i" "${sessions[$i]}"
+        done
+
+        echo
+        echo "b - back"
+        echo
+
+        read -r -p "> " choice
+
+        case "$choice" in
+            b|B)
+                return
+                ;;
+            ''|*[!0-9]*)
+                ;;
+            *)
+                if (( choice >= 0 && choice < count )); then
+                    selected="${sessions[$choice]}"
+                    respawn_session "$selected"
+                    return
+                fi
+                ;;
+        esac
+    done
+}
+
+# Display the main menu and attach/create/rename/respawn/kill as requested.
 main_menu() {
     local choice
     local count
@@ -271,7 +391,7 @@ main_menu() {
         count="${#sessions[@]}"
         current_session="$(get_current_session)"
 
-        echo "dmux 1.4.7"
+        echo "dmux 1.4.8"
         echo "=========="
         echo
 
@@ -290,6 +410,7 @@ main_menu() {
         echo
         echo "n - create new"
         echo "r - rename existing session"
+        echo "s - respawn existing session"
         echo "k - kill existing session"
         echo "q - quit"
         echo
@@ -302,6 +423,9 @@ main_menu() {
                 ;;
             r|R)
                 rename_session_menu
+                ;;
+            s|S)
+                respawn_session_menu
                 ;;
             k|K)
                 kill_session_menu
